@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteRow, editRow } from "../Action/action";
+import { deleteRow, editRow } from "../Action/action"; 
+import "./Table.css"
 
 const Table = () => {
-  const acessState = useSelector((state) => state.list);
+  const acessState = useSelector((state) => state.userTableInformation);
   console.log(acessState);
   const Dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,12 +20,12 @@ const Table = () => {
 
   const userEditRow = (index) => {
     //  Dispatch(editRow(index));
-    navigate(`/Form/${index}`); 
+    navigate(`/Form/${index}`);
     // Dispatch(editRow(index))
   };
 
   return (
-    <div>
+    <div className="Table">
       <button onClick={addUserRow}>Add Table</button>
       <table className="table">
         <tr>

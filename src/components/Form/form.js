@@ -8,28 +8,28 @@ const Form = () => {
   const [formData, setForm] = useState({ name: "", phone: "", email: "" });
 
   const [errorObject, seterrorObject] = useState({});
-  const [Statue, setStatue] = useState(false);
+  const [Status, setStatus] = useState(false);
   const [SelectedId, setSelectedId] = useState("");
 
   const Dispatch = useDispatch();
-
   const navigate = useNavigate();
   const params = useParams();
   const userId = params.id;
 
-  const acessState = useSelector((state) => state.list);
-  const acessStateId = useSelector((state) => state.id);
-  const acessStateRoutedId = useSelector((state) => state.routingId);
+  const acessStateTable = useSelector((state) => state.userTableInformation);
 
   useEffect(() => {
-    if (userId && acessState.length !== 0) {
-      const informationFilter = acessState.find(
+    if (userId) {
+      const userInformationFilter = acessStateTable.find(
         (each) => parseInt(each.id) === parseInt(userId)
       );
-      const { name, phone, email } = informationFilter;
-      setForm({ name, phone, email });
-      setStatue(true);
-      setSelectedId(userId);
+
+      if (userInformationFilter) {
+        const { name, phone, email } = userInformationFilter;
+        setForm({ name, phone, email });
+        setStatus(true);
+        setSelectedId(userId);
+      }
     }
 
     return () => {
@@ -37,7 +37,7 @@ const Form = () => {
     };
   }, [userId]);
 
-  const handle = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((prev) => ({
       ...prev,
@@ -48,30 +48,28 @@ const Form = () => {
   const formSubmit = (event) => {
     event.preventDefault();
 
-    const empty1 = {};
+    const emptyObject = {};
     if (formData.name === "") {
-      empty1.name1 = "*Name Required";
+      emptyObject.userName = "*Name Required";
     } else if (formData.name.length <= 2) {
-      empty1.name1 = "*Name characters should be greater than 2";
+      emptyObject.userName = "*Name characters should be greater than 2";
     }
 
     if (formData.phone === "") {
-      empty1.phone1 = "*Phone Required";
+      emptyObject.userPhone = "*Phone Required";
     } else if (formData.phone.length !== 10) {
-      empty1.phone1 = "*Phone number length to be 10";
+      emptyObject.userPhone = "*Phone number length to be 10";
     }
 
     if (formData.email === "") {
-      empty1.email1 = "*Email Required";
+      emptyObject.userEmail = "*Email Required";
     } else if (!formData.email.includes("@")) {
-      empty1.email1 = "*Email must include @ format";
+      emptyObject.userEmail = "*Email must include @ format";
     }
 
-    const objectLength = Object.keys(empty1).length;
+    const objectLength = Object.keys(emptyObject).length;
 
     if (objectLength === 0) {
-      // setNumber(number + 1);
-      // formData.id = number;
       Dispatch(userSubmit(formData));
       setForm({
         name: "",
@@ -80,36 +78,8 @@ const Form = () => {
       });
       seterrorObject({});
     } else {
-      seterrorObject(empty1);
+      seterrorObject(emptyObject);
     }
-  };
-
-  //   const editRow = (index) => {
-  //     const informationFilter = list.find((each) => each.id === index);
-  //     const { name, phone, email } = informationFilter;
-  //     setForm({ name, phone, email });
-  //     setStatue(true);
-  //     setSelectedId(index);
-  //   };
-
-  //   const updateRow = () => {
-  //     const Latest = list.findIndex((each) => each.id === SelectedId);
-  //     const ones = {
-  //       name: formData.name,
-  //       phone: formData.phone,
-  //       email: formData.email,
-  //       id: SelectedId,
-  //     };
-  //     list.splice(Latest, 1, ones);
-  //     const listing = [...list];
-  //     console.log(listing);
-  //     setList(listing);
-  //     setForm({ name: "", phone: "", email: "" });
-  //     setStatue(false);
-  //   };
-
-  const deleteRow1 = (index) => {
-    Dispatch(deleteRow(parseInt(index)));
   };
 
   const usercheckTable = () => {
@@ -117,68 +87,65 @@ const Form = () => {
   };
 
   const userUpdate = () => {
-    const Latest = acessState.findIndex(
+    const acessUserIndex = acessStateTable.findIndex(
       (each) => parseInt(each.id) === parseInt(SelectedId)
     );
-    const ones = {
+    const userUpdatedRow = {
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
       id: userId,
     };
-    Dispatch(updateRow({ Latest, ones }));
-    // acessState.splice(Latest, 1, ones);
-    // const listing = [...list];
+    Dispatch(updateRow({ acessUserIndex, userUpdatedRow }));
 
-    // setList(listing);
     setForm({ name: "", phone: "", email: "" });
-    setStatue(false);
+    setStatus(false);
   };
 
   return (
-    <div>
+    <div className="formPage">
       <div className="form">
         <form onSubmit={formSubmit}>
           <label>Name:</label>
           <br />
           <input
-            onChange={handle}
+            onChange={handleChange}
             type="text"
             name="name"
             value={formData.name}
           />
           {Object.keys(errorObject).length === 0 ? null : (
-            <p className="Required">{errorObject.name1}</p>
+            <p className="Required">{errorObject.userName}</p>
           )}
           <br />
           <label>phone:</label>
           <br />
           <input
-            onChange={handle}
+            onChange={handleChange}
             type="text"
             name="phone"
             value={formData.phone}
           />
           {Object.keys(errorObject).length === 0 ? null : (
-            <p className="Required">{errorObject.phone1}</p>
+            <p className="Required">{errorObject.userPhone}</p>
           )}
           <br />
           <label>Email:</label>
           <br />
           <input
-            onChange={handle}
+            onChange={handleChange}
             type="text"
             name="email"
             value={formData.email}
           />
           {Object.keys(errorObject).length === 0 ? null : (
-            <p className="Required">{errorObject.email1}</p>
+            <p className="Required">{errorObject.userEmail}</p>
           )}
           <br />
 
-          {Statue ? "" : <button type="submit">Submit</button>}
+          {Status ? "" : <button type="submit">Submit</button>}
         </form>
-        {Statue ? <button onClick={userUpdate}>Update</button> : ""}
+        {Status ? <button onClick={userUpdate}>Update</button> : ""}
       </div>
       <button onClick={usercheckTable}>Check table</button>
     </div>

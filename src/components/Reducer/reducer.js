@@ -1,5 +1,5 @@
 const initialState = {
-  list: [],
+  userTableInformation: [],
   id: 0,
   routingId: null,
 };
@@ -9,21 +9,26 @@ const Reducer = (state = initialState, action) => {
     case "SUBMIT":
       return {
         ...state,
-        list: [...state.list, { ...action.payload, id: state.id }],
-        id: state.id + 1
+        userTableInformation: [
+          ...state.userTableInformation,
+          { ...action.payload, id: state.id },
+        ],
+        id: state.id + 1,
       };
     case "DELETE":
       return {
         ...state,
-        list: state.list.filter((each) => each.id !== action.payload),
+        userTableInformation: state.userTableInformation.filter(
+          (each) => each.id !== action.payload
+        ),
       };
     case "UPDATE":
-      const first = parseInt(action.payload.Latest);
-      const second = action.payload.ones;
-      state.list.splice(first, 1, second);
+      const acessedUserIndex = parseInt(action.payload.acessUserIndex);
+      const acessedUserData = action.payload.userUpdatedRow;
+      state.userTableInformation.splice(acessedUserIndex, 1, acessedUserData);
       return {
         ...state,
-        list: state.list,
+        userTableInformation: state.userTableInformation,
       };
 
     case "EDIT":

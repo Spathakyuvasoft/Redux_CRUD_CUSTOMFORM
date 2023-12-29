@@ -6,7 +6,7 @@ import {
   BrowserRouter,
 } from "react-router-dom";
 import { createRoot } from "react-dom/client";
-import BasicExample from "./components/Form/form";
+
 import Table from "./components/Table/Table";
 import Form from "./components/Form/form";
 
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/form",
-    element: <BasicExample />,
+    element: <Form />,
   },
   {
     path: "/form/:id",

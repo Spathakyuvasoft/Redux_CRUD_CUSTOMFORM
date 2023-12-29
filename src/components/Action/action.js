@@ -1,7 +1,7 @@
-export function userSubmit(users) {
+export function userSubmit(userData) {
   return {
     type: "SUBMIT",
-    payload: users,
+    payload: userData,
   };
 }
 
@@ -12,18 +12,16 @@ export function deleteRow(index) {
   };
 }
 
-export function updateRow(userData) { 
-  console.log(userData)
+export function updateRow(userData) {
   return {
     type: "UPDATE",
     payload: userData,
   };
-} 
+}
 
-
-export function editRow(index){
+export function editRow(index) {
   return {
-    type:"EDIT",
-    payload:index
-  }
+    type: "EDIT",
+    payload: index,
+  };
 }
